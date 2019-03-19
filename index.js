@@ -4,22 +4,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const BASE_URL = process.env.API_URL;
-const API_KEY = process.env.API_KEY;
+const api_key = process.env.api_key;
 const API_OPTIONS = {
   headers: { accept: "application/json" },
-  timeout: 1000,
-  responseType: "text"
+  timeout: 3000,
+  responseType: "json"
 };
 
 const API = axios.create({
-  baseURL: BASE_URL,
-  params: {
-    accessId: API_KEY,
-    format: "json"
-  },
-  API_OPTIONS
+  baseURL: "https://api.uptimerobot.com/v2/getMonitors",
 });
 
 const app = express();
@@ -37,8 +32,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/", function(req, res) {
-  API.get(req.body.url, {
-    params: req.body.params
+  API.post(req.body.url, {
+          api_key: api_key,
+          format: "json",
   })
     .then(response => {
       res.json(response.data);
@@ -46,8 +42,9 @@ app.post("/", function(req, res) {
     .catch(e => {
       console.log(e);
     });
+
 });
 
 app.listen(PORT, function() {
-  console.log('proxify is listening on port %s', PORT)
-})
+  console.log('proxify is listening on port ', PORT)
+});
