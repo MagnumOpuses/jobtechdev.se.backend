@@ -1,11 +1,4 @@
-# proxify - (proof-of-concept) API proxy
 
-Consuming APIs with SPAs reveals the API key to the end user. This is not the
-desired behavior, as one wants to keep his API key a secret.
-
-This package starts an `express` server that proxies all `POST` requests to the
-API specified in the `API_URL` environment variable. The API key can be
-specified with `API_KEY`.
 
 ## Usage
 
