@@ -13,11 +13,32 @@ const API_OPTIONS = {
   timeout: 3000,
   responseType: "json"
 };
+const fs = require('fs');
 var url = require('url');
+var mcache = require('memory-cache')
 
 
 
 const app = express();
+
+
+var cache = (duration) => {
+    return (req, res, next) => {
+        let key = '__express__' + req.originalUrl || req.url
+        let cachedBody = mcache.get(key)
+        if (cachedBody) {
+            res.send(cachedBody)
+            return
+        } else {
+            res.sendResponse = res.send
+            res.send = (body) => {
+                mcache.put(key, body, duration * 1000);
+                res.sendResponse(body)
+            }
+            next()
+        }
+    }
+}
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -33,22 +54,28 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-app.get('/git/*', function(req, res) {
+app.get('/git/*',cache(6000), function(req, res) {
 
     var url_parts = url.parse(req.url, true);
-    const api_keyj = process.env.api_key;
+
 
     var API = axios.create({
         baseURL: "https://api.github.com"+url_parts.path.replace("/git","")+"&client_id=4468ae21ec651cb786c2&client_secret=cf1ac73cf6079b88322a278bbce566a9bf5cc18b"
 
     });
+    fs.appendFile('url.txt', '\n https://api.github.com'+url_parts.path.replace("/git",""), function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+    });
     API.get(req.body.url, {
 
     })
+
         .then(response => {
             res.json(response.data);
 
         })
+
         .catch(e => {
             console.log(e);
         });
