@@ -100,6 +100,6 @@ app.get("/yrkesinfo/!*", function(req, res) {
 
 });
 */
-app.listen(PORT, "localhost", function() {
+app.listen(PORT, function() {
   console.log('proxify is listening on port ', PORT)
 });
