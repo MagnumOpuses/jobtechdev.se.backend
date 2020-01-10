@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 const BASE_URL = process.env.API_URL;
 const api_key = process.env.api_key;
 const client_id = process.env.client_id;
