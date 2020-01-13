@@ -82,6 +82,12 @@ app.get('/git/*',cache(6000), function(req, res) {
         });
 });
 
+app.get('/clear',cache(6000), function(req, res) {
+
+    mcache.clear()
+    res.send('GET request to homepage')
+});
+
 /*
 app.get("/jobsearch/!*", function(req, res) {
 
