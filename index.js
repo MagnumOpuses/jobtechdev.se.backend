@@ -53,13 +53,7 @@ app.use(function(req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('*', function (req, res) {
-    res.send(req.originalUrl)
-});
 
-app.get('/api/*', function (req, res) {
-    res.send(req.originalUrl)
-});
 
 app.get('/api/git/*',cache(6000), function(req, res) {
 
