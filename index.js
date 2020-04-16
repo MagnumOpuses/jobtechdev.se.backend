@@ -61,7 +61,7 @@ app.get('/api/*', function (req, res) {
     res.send(req.originalUrl)
 });
 
-app.get('/git/*',cache(6000), function(req, res) {
+app.get('/api/git/*',cache(6000), function(req, res) {
 
     var url_parts = url.parse(req.url, true);
 
