@@ -55,7 +55,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 
-app.get('/api/git/*',cache(6000), function(req, res) {
+app.get('/api/github/*',cache(6000), function(req, res) {
 
     var url_parts = url.parse(req.url, true);
 
