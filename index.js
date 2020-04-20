@@ -61,10 +61,10 @@ app.get('/api/github/*',cache(6000), function(req, res) {
 
 
     var API = axios.create({
-        baseURL: "https://api.github.com"+url_parts.path.replace("/api/git","")+"&client_id="+client_id+"&client_secret="+client_secret
+        baseURL: "https://api.github.com"+url_parts.path.replace("/api/github","")+"&client_id="+client_id+"&client_secret="+client_secret
 
     });
-    fs.appendFile('url.txt', '\n https://api.github.com'+url_parts.path.replace("/api/git",""), function (err) {
+    fs.appendFile('url.txt', '\n https://api.github.com'+url_parts.path.replace("/api/github",""), function (err) {
         if (err) throw err;
 
     });
