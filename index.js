@@ -88,52 +88,7 @@ app.get('/clear',cache(6000), function(req, res) {
     res.send('Cache cleared')
 });
 
-/*
-app.get("/jobsearch/!*", function(req, res) {
 
-    var url_parts = url.parse(req.url, true);
-    const api_keyj = process.env.api_key;
-
-    var API = axios.create({
-        baseURL: "https://jobsearch.api.jobtechdev.se/"+url_parts.path.replace("/jobsearch",""),
-        headers: {'api-key': api_key},
-    });
-  API.get(req.body.url, {
-
-  })
-    .then(response => {
-      res.json(response.data);
-
-    })
-    .catch(e => {
-      console.log(e);
-    });
-});
-
-app.get("/yrkesinfo/!*", function(req, res) {
-    const api_keyj = process.env.api_key;
-    var url_parts = url.parse(req.url, true);
-    var API = axios.create({
-        baseURL: "https://apier.arbetsformedlingen.se"+url_parts.path.replace("/yrkesinfo",""),
-        params:{
-            client_id: client_id,
-            client_secret: client_secret,
-        }
-    });
-
-    API.get(req.body.url, {
-        format: "json",
-    })
-        .then(response => {
-            res.json(response.data);
-
-        })
-        .catch(e => {
-            console.log(e);
-        });
-
-});
-*/
 app.listen(PORT, function() {
   console.log('proxify is listening on port ', PORT)
 });
