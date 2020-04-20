@@ -6,6 +6,8 @@ const axios = require("axios");
 const PORT = process.env.PORT || 8080;
 const BASE_URL = process.env.API_URL;
 const api_key = process.env.api_key;
+const clientIdGitlab = process.env.client_id_gitlab;
+const apiKeyGitlab = process.env.client_secret_gitlab;
 const client_id = process.env.client_id;
 const client_secret = process.env.client_secret;
 const API_OPTIONS = {
@@ -81,8 +83,35 @@ app.get('/api/github/*',cache(6000), function(req, res) {
             console.log(e);
         });
 });
+app.get('/api/gitlab/*',cache(6000), function(req, res) {
 
-app.get('/clear',cache(6000), function(req, res) {
+    var url_parts = url.parse(req.url, true);
+
+
+    var API = axios.create({
+        baseURL: "https://gitlab.com"+url_parts.path.replace("/api/gitlab","")+"&client_id="+clientIdGitlab+"&client_secret="+apiKeyGitlab
+
+    });
+    fs.appendFile('url.txt', '\n https://api.github.com'+url_parts.path.replace("/api/gitlab",""), function (err) {
+        if (err) throw err;
+
+    });
+    API.get(req.body.url, {
+
+    })
+
+        .then(response => {
+            res.json(response.data);
+
+        })
+
+        .catch(e => {
+            console.log(e);
+        });
+});
+
+
+app.get('/api/clear',cache(6000), function(req, res) {
 
     mcache.clear()
     res.send('Cache cleared')
