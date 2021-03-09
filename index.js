@@ -130,7 +130,7 @@ app.post("/api/form", function(req, res) {
       to: "mats.lofstrand@arbetsformedlingen.se, ulrika.haggqvist@arbetsformedlingen.se", // list of receivers
       subject: "Anmälan", // Subject line
       text: req.body.namn, // plain text body
-      html: "<b>"+req.body.namn+"</b>", // html body
+      html: "<b>"+JSON.stringify(req.body)+"</b>", // html body
     });
   
     console.log("Message sent: %s", info.messageId);
