@@ -8,6 +8,8 @@ const nodemailer = require("nodemailer");
 const PORT = process.env.PORT || 8080;
 const BASE_URL = process.env.API_URL;
 const api_key = process.env.api_key;
+const mailUser = process.env.mailuser;
+const mailPassword = process.env.mailpassword;
 const clientIdGitlab = process.env.client_id_gitlab;
 const apiKeyGitlab = process.env.client_secret_gitlab;
 const client_id = process.env.client_id;
@@ -70,43 +72,30 @@ app.get('/api/github/*',cache(6000), function(req, res) {
     });
     fs.appendFile('url.txt', '\n https://api.github.com'+url_parts.path.replace("/api/github",""), function (err) {
         if (err) throw err;
-
     });
     API.get(req.body.url, {
 
     })
-
         .then(response => {
             res.json(response.data);
-
         })
-
         .catch(e => {
             console.log(e);
         });
 });
 app.get('/api/gitlab/*',cache(6000), function(req, res) {
-
     var url_parts = url.parse(req.url, true);
-
-
     var API = axios.create({
         baseURL: "https://gitlab.com"+url_parts.path.replace("/api/gitlab","")+"&client_id="+clientIdGitlab+"&client_secret="+apiKeyGitlab
-
     });
     fs.appendFile('url.txt', '\n https://api.github.com'+url_parts.path.replace("/api/gitlab",""), function (err) {
         if (err) throw err;
-
     });
     API.get(req.body.url, {
-
     })
-
         .then(response => {
             res.json(response.data);
-
         })
-
         .catch(e => {
             console.log(e);
         });
@@ -130,8 +119,8 @@ app.post("/api/form", function(req, res) {
       port: 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: '', // generated ethereal user
-        pass: '', // generated ethereal password
+        user: mailUser, // generated ethereal user
+        pass: mailPassword, // generated ethereal password
       },
     });
   
