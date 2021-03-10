@@ -108,6 +108,12 @@ app.get('/api/clear',cache(6000), function(req, res) {
     res.send('Cache cleared')
 });
 app.post("/api/form", function(req, res) {
+
+let result=req.body.options[0];
+for (i=1;req.body.options.length > i;i++){                         
+  result += (i == req.body.options.length-1) ? " och "+req.body.options[i]:", "+req.body.options[i] 
+}
+console.log(result)
   async function main() {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
@@ -141,9 +147,10 @@ app.post("/api/form", function(req, res) {
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
   }
   
-  
+  let body = req.body;
+  body.textString = result;
   main().catch(console.error);
-  res.send(req.body)
+  res.send(body)
 })
 
 app.listen(PORT, function() {
