@@ -110,7 +110,7 @@ app.get('/api/clear',cache(6000), function(req, res) {
 app.post("/api/form", function(req, res) {
 
 let result=req.body.options[0];
-for (i=1;req.body.options.length > i;i++){                         
+for (let i=1;req.body.options.length > i;i++){                         
   result += (i == req.body.options.length-1) ? " och "+req.body.options[i]:", "+req.body.options[i] 
 }
 console.log(result)
