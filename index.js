@@ -148,6 +148,7 @@ console.log(result)
   }
   
   let body = req.body;
+  result = `<p> Tack ${req.body.namn}, för din anmälan <br>Du har anmält dig till ${result} <br> En bekräftelse har skickats till:<br> ${req.body.email}</p>`
   body.textString = result;
   main().catch(console.error);
   res.send(body)
