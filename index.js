@@ -108,14 +108,15 @@ app.get('/api/clear',cache(6000), function(req, res) {
     res.send('Cache cleared')
 });
 app.post("/api/form", function(req, res) {
+  let result
 if(req.body.lang === "sv"){
-  let result=req.body.options[0];
+  result=req.body.options[0];
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " och "+req.body.options[i]:", "+req.body.options[i] 
   }
   result = `<p> Tack! ${req.body.namn}, för din anmälan. <br>Du har anmält dig till ${result} <br> En bekräftelse har skickats till:<br> ${req.body.email}</p>`
 }else{
-  let result=req.body.options[0];
+  result=req.body.options[0];
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " and "+req.body.options[i]:", "+req.body.options[i] 
   }
