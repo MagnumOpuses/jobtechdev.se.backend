@@ -114,13 +114,16 @@ if(req.body.lang === "sv"){
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " och "+req.body.options[i]:", "+req.body.options[i] 
   }
+  let mailText = result 
   result = `<p> Tack! ${req.body.namn}, för din anmälan. <br>Du har anmält dig till ${result} <br> En bekräftelse har skickats till:<br> ${req.body.email}</p>`
 }else{
   result=req.body.options[0];
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " and "+req.body.options[i]:", "+req.body.options[i] 
   }
+  let mailText = result 
   result = `<p> Thanks! ${req.body.namn}, for singing up. <br>You have singed up for ${result} <br> a conformation have been sent to:<br> ${req.body.email}</p>`
+
 }
 console.log(result)
 function createMailObj (to, subject, text, html){
@@ -148,24 +151,21 @@ function createMailObj (to, subject, text, html){
       },
     });
   
-    let info = await transporter.sendMail({
-      from: '"Jobtechdev" <noreply@discourse.jobtechdev.se>', // sender address
-      to: "mats.lofstrand@arbetsformedlingen.se, ulrika.haggqvist@arbetsformedlingen.se", // list of receivers
-      subject: "Anmälan", // Subject line
-      text: req.body.namn, // plain text body
-      html: "<b>"+JSON.stringify(req.body)+"</b>", // html body
-    });
 
 
+    for (i=0; req.body.options.length > i; i++) {
+      let info = await transporter.sendMail(createMailObj('ulrika.haggqvist@arbetsformedlingen.se',req.body.options[i],`Deltagare ${req.body.namn} ${req.body.email}`,`Deltagare ${req.body.namn} <br> ${req.body.email}`));
+      console.log("Message sent: %s", info.messageId);
+      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    
+      // Preview only available when sending through an Ethereal account
+      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+      // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou..
+    }
     // send mail with defined transport object
-    let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",result,result));
+    let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",`Du är välkommen att ansulta till jitsi den ${mailText}`,`Du är välkommen att ansulta till jitsi den ${mailText}`));
   
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-  
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+.
 
     console.log("Message sent: %s", confirmation.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
