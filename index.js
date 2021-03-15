@@ -153,7 +153,7 @@ function createMailObj (to, subject, text, html){
   
 
 
-    for (i=0; req.body.options.length > i; i++) {
+    for (let i=0; req.body.options.length > i; i++) {
       let info = await transporter.sendMail(createMailObj('ulrika.haggqvist@arbetsformedlingen.se',req.body.options[i],`Deltagare ${req.body.namn} ${req.body.email}`,`Deltagare ${req.body.namn} <br> ${req.body.email}`));
       console.log("Message sent: %s", info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
