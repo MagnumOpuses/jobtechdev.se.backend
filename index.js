@@ -134,6 +134,7 @@ function createMailObj (to, subject, text, html){
       obj.subject = subject; // Subject line
       obj.text = text; // plain text body
       obj.html = html; // html body
+      obj.namn = namn
       return obj
 }
   async function main() {
