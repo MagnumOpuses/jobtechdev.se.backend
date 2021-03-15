@@ -164,7 +164,7 @@ function createMailObj (to, subject, text, html){
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou..
     }
     // send mail with defined transport object
-    let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",`Hej ${req.body.namn}! Du är välkommen att ansulta till jitsi den ${mailText}`,`Du är välkommen att ansulta till jitsi den ${mailText}<br> Med vänlig hälsningar JobTech Development`));
+    let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",`Hej ${req.body.namn}!<br> Du är välkommen att ansulta till jitsi den ${mailText}`,`Du är välkommen att ansulta till jitsi den ${mailText}<br> Med vänlig hälsningar JobTech Development`));
   
 
 
