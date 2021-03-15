@@ -109,19 +109,20 @@ app.get('/api/clear',cache(6000), function(req, res) {
 });
 app.post("/api/form", function(req, res) {
   let result
+  let mailText
 if(req.body.lang === "sv"){
   result=req.body.options[0];
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " och "+req.body.options[i]:", "+req.body.options[i] 
   }
-  let mailText = result 
+  mailText = result 
   result = `<p> Tack! ${req.body.namn}, för din anmälan. <br>Du har anmält dig till ${result} <br> En bekräftelse har skickats till:<br> ${req.body.email}</p>`
 }else{
   result=req.body.options[0];
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " and "+req.body.options[i]:", "+req.body.options[i] 
   }
-  let mailText = result 
+  mailText = result 
   result = `<p> Thanks! ${req.body.namn}, for singing up. <br>You have singed up for ${result} <br> a conformation have been sent to:<br> ${req.body.email}</p>`
 
 }
