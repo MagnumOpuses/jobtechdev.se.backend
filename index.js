@@ -165,7 +165,7 @@ function createMailObj (to, subject, text, html){
     // send mail with defined transport object
     let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",`Du är välkommen att ansulta till jitsi den ${mailText}`,`Du är välkommen att ansulta till jitsi den ${mailText}`));
   
-.
+
 
     console.log("Message sent: %s", confirmation.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
