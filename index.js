@@ -123,6 +123,14 @@ if(req.body.lang === "sv"){
   result = `<p> Thanks! ${req.body.namn}, for singing up. <br>You have singed up for ${result} <br> a conformation have been sent to:<br> ${req.body.email}</p>`
 }
 console.log(result)
+function createMailObj (to, subject, text, html){
+  obj.from = '"Jobtechdev" <noreply@discourse.jobtechdev.se>', // sender address
+  obj.to = to; // list of receivers
+      obj.subject = subject; // Subject line
+      obj.text = text; // plain text body
+      obj.html = html; // html body
+      return obj
+}
   async function main() {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
@@ -139,7 +147,6 @@ console.log(result)
       },
     });
   
-    // send mail with defined transport object
     let info = await transporter.sendMail({
       from: '"Jobtechdev" <noreply@discourse.jobtechdev.se>', // sender address
       to: "mats.lofstrand@arbetsformedlingen.se, ulrika.haggqvist@arbetsformedlingen.se", // list of receivers
@@ -147,6 +154,10 @@ console.log(result)
       text: req.body.namn, // plain text body
       html: "<b>"+JSON.stringify(req.body)+"</b>", // html body
     });
+
+
+    // send mail with defined transport object
+    let info = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",result,result));
   
     console.log("Message sent: %s", info.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
