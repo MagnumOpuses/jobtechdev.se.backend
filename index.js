@@ -124,6 +124,7 @@ if(req.body.lang === "sv"){
 }
 console.log(result)
 function createMailObj (to, subject, text, html){
+  let obj 
   obj.from = '"Jobtechdev" <noreply@discourse.jobtechdev.se>', // sender address
   obj.to = to; // list of receivers
       obj.subject = subject; // Subject line
