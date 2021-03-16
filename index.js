@@ -128,7 +128,7 @@ app.post("/api/form", async function (req, res) {
   }
 
   // Validate mail
-  if (!/^[^\s@]+@[^\s@]+$/.text(mail) || mail.length >= 45) {
+  if (!/^[^\s@]+@[^\s@]+$/.test(mail) || mail.length >= 45) {
     return raiseError('Tokig e-postadress');
   }
 
