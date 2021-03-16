@@ -1,5 +1,6 @@
 "use strict";
 require('dotenv').config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
@@ -19,14 +20,12 @@ const API_OPTIONS = {
   timeout: 3000,
   responseType: "json"
 };
+
 const fs = require('fs');
-var url = require('url');
-var mcache = require('memory-cache')
-
-
+const url = require('url');
+const mcache = require('memory-cache')
 
 const app = express();
-
 
 var cache = (duration) => {
     return (req, res, next) => {
@@ -47,7 +46,6 @@ var cache = (duration) => {
 }
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept",
@@ -107,42 +105,79 @@ app.get('/api/clear',cache(6000), function(req, res) {
     mcache.clear()
     res.send('Cache cleared')
 });
-app.post("/api/form", function(req, res) {
+
+app.post("/api/form", async function (req, res) {
   let result
   let mailText
-if(req.body.lang === "sv"){
-  result=req.body.options[0];
-  for (let i=1;req.body.options.length > i;i++){                         
-    result += (i == req.body.options.length-1) ? " och "+req.body.options[i]:", "+req.body.options[i] 
-  }
-  mailText = `<p> Hej ${req.body.namn}!, Du är välkommen att ansluta till https://jitsi.jobtechdev.se/komigang/fragestund ${result}. <br> Med vänlig hälsning, JobTech Development ${req.body.email}</p>`
-  result = `<p> Tack! ${req.body.namn}, för din anmälan. <br>Du har anmält dig till ${result}. <br> En bekräftelse har skickats till:<br> ${req.body.email}</p>`
-}else{
-  result=req.body.options[0];
-  for (let i=1;req.body.options.length > i;i++){                         
-    result += (i == req.body.options.length-1) ? " and "+req.body.options[i]:", "+req.body.options[i] 
-  }
-  mailText = `<p> Hi ${req.body.namn}!, You are welcome to join https://jitsi.jobtechdev.se/komigang/fragestund ${result}. <br> Best regards JobTech Development ${req.body.email}</p>`
-  result = `<p> Thanks! ${req.body.namn}, for singing up. <br>You have singed up for ${result}. <br> a conformation have been sent to:<br> ${req.body.email}</p>`
 
-}
-console.log(result)
-function createMailObj (to, subject, text, html){
-  let obj = new Object 
-  obj.from = '"Jobtechdev" <noreply@discourse.jobtechdev.se>', // sender address
-  obj.to = to; // list of receivers
-      obj.subject = subject; // Subject line
-      obj.html = html; // html body
- 
-      return obj
-}
+  const body = req.body;
+  const lang = body.lang;
+  const opts = body.options;
+  const namn = body.namn;
+  const mail = body.email;
+
+  function raiseError (error) {
+    console.error(error);
+    body.error = error;
+    res.send(body);
+  }
+
+  // Validate name
+  if (/[^a-zåäöÅÄÖ]/i.test(namn)) {
+    return raiseError('Namn måste vara a-ö 2-45 tecken');
+  }
+
+  // Validate mail
+  if (!/^[^\s@]+@[^\s@]+$/.text(mail) || mail.length >= 45) {
+    return raiseError('Tokig e-postadress');
+  }
+
+  // Escape html
+  opts = opts.map(unsafe => {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  });
+
+  // ['mats', 'ulrika', 'jonas'].map(x => x.toUpperCase())
+  /// ['ulrika', 'mats', 'jonas'].join('-') + '&' == ulrika-mats-jonas&
+  if (lang === "sv"){
+    result=opts[0];
+    for (let i=1;opts.length > i;i++){                         
+      result += (i == opts.length-1) ? " och "+opts[i]:", "+opts[i] 
+    }
+    mailText = `<p> Hej ${namn}!, Du är välkommen att ansluta till https://jitsi.jobtechdev.se/komigang/fragestund ${result}. <br> Med vänlig hälsning, JobTech Development ${mail}</p>`
+    result = `<p> Tack! ${namn}, för din anmälan. <br>Du har anmält dig till ${result}. <br> En bekräftelse har skickats till:<br> ${mail}</p>`
+  }else{
+    result=opts[0];
+    for (let i=1;opts.length > i;i++){                         
+      result += (i == opts.length-1) ? " and "+opts[i]:", "+opts[i] 
+    }
+    mailText = `<p> Hi ${namn}!, You are welcome to join https://jitsi.jobtechdev.se/komigang/fragestund ${result}. <br> Best regards JobTech Development ${mail}</p>`
+    result = `<p> Thanks! ${namn}, for singing up. <br>You have singed up for ${result}. <br> a conformation have been sent to:<br> ${mail}</p>`
+  }
+
+  function createMailObj (to, subject, body){
+    const obj = new Object;
+
+    obj.from = '"Jobtechdev" <noreply@discourse.jobtechdev.se>', // sender address
+    obj.to = to; 
+    obj.subject = subject; 
+    obj.html = body; 
+
+    return obj
+  }
+
   async function main() {
     // Generate test SMTP service account from ethereal.email
     // Only needed if you don't have a real mail account for testing
     ;
   
     // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
+    const transporter = nodemailer.createTransport({
       host: "email-smtp.eu-central-1.amazonaws.com",
       port: 587,
       secure: false, // true for 465, false for other ports
@@ -151,11 +186,16 @@ function createMailObj (to, subject, text, html){
         pass: mailPassword, // generated ethereal password
       },
     });
-  
 
-
-    for (let i=0; req.body.options.length > i; i++) {
-      let info = await transporter.sendMail(createMailObj('jobtechdevelopment@arbetsformedlingen.se',req.body.options[i],`Deltagare ${req.body.namn} ${req.body.email}`,`Deltagare ${req.body.namn} <br> ${req.body.email}`));
+    for (let i=0; opts.length > i; i++) {
+      const info = await transporter.sendMail(
+        createMailObj(
+          'jobtechdevelopment@arbetsformedlingen.se',
+          opts[i],
+          `Deltagare ${namn} <br> ${mail}`
+        )
+      );
+    
       console.log("Message sent: %s", info.messageId);
       // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
     
@@ -163,11 +203,10 @@ function createMailObj (to, subject, text, html){
       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou..
     }
+
     // send mail with defined transport object
-    let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",mailText, mailText));
+    const confirmation = await transporter.sendMail(createMailObj(mail, "Bekräftelse på din anmälan", mailText));
   
-
-
     console.log("Message sent: %s", confirmation.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
   
@@ -176,11 +215,13 @@ function createMailObj (to, subject, text, html){
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
   }
   
+  try {
+    await main();
+    body.textString = result;
+  } catch (err) {
+    body.textString = 'Ett oväntat fel har inträffat';
+  }
   
-  let body = req.body;
-  
-  body.textString = result;
-  main().catch(console.error);
   res.send(body)
 })
 
