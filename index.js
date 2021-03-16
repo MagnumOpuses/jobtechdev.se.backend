@@ -115,15 +115,15 @@ if(req.body.lang === "sv"){
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " och "+req.body.options[i]:", "+req.body.options[i] 
   }
-  mailText = result 
-  result = `<p> Tack! ${req.body.namn}, för din anmälan. <br>Du har anmält dig till ${result} <br> En bekräftelse har skickats till:<br> ${req.body.email}</p>`
+  mailText = `<p> Hej ${req.body.namn}!, Du är välkommen att ansluta till https://jitsi.jobtechdev.se/komigang/fragestund ${result}. <br> Med vänlig hälsning, JobTech Development ${req.body.email}</p>`
+  result = `<p> Tack! ${req.body.namn}, för din anmälan. <br>Du har anmält dig till ${result}. <br> En bekräftelse har skickats till:<br> ${req.body.email}</p>`
 }else{
   result=req.body.options[0];
   for (let i=1;req.body.options.length > i;i++){                         
     result += (i == req.body.options.length-1) ? " and "+req.body.options[i]:", "+req.body.options[i] 
   }
-  mailText = result 
-  result = `<p> Thanks! ${req.body.namn}, for singing up. <br>You have singed up for ${result} <br> a conformation have been sent to:<br> ${req.body.email}</p>`
+  mailText = `<p> Hi ${req.body.namn}!, You are welcome to join https://jitsi.jobtechdev.se/komigang/fragestund ${result}. <br> Best regards JobTech Development ${req.body.email}</p>`
+  result = `<p> Thanks! ${req.body.namn}, for singing up. <br>You have singed up for ${result}. <br> a conformation have been sent to:<br> ${req.body.email}</p>`
 
 }
 console.log(result)
@@ -132,7 +132,6 @@ function createMailObj (to, subject, text, html){
   obj.from = '"Jobtechdev" <noreply@discourse.jobtechdev.se>', // sender address
   obj.to = to; // list of receivers
       obj.subject = subject; // Subject line
-      obj.text = text; // plain text body
       obj.html = html; // html body
  
       return obj
@@ -165,7 +164,7 @@ function createMailObj (to, subject, text, html){
       // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou..
     }
     // send mail with defined transport object
-    let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",`Hej ${req.body.namn}!<br> Du är välkommen att ansulta till jitsi den ${mailText}`,`Du är välkommen att ansulta till jitsi den ${mailText}<br> Med vänlig hälsningar JobTech Development`));
+    let confirmation = await transporter.sendMail(createMailObj(req.body.email, "Bekräftelse på din anmälan",mailText, mailText));
   
 
 
