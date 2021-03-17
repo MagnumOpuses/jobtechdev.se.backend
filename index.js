@@ -124,9 +124,11 @@ app.post("/api/form", async function (req, res) {
 
   // Validate name
   console.log(namn)
+  console.log(/^[a-zA-ZåäöÅÄÖ -]+$/.test("Åsa"))
+  console.log(/^[a-zA-ZåäöÅÄÖ -]+$/.test(namn))
   if (/^[a-zA-ZåäöÅÄÖ -]+$/.test(namn)) {
     return raiseError('Namn måste vara a-ö 2-45 tecken');
-  }
+      }
 
   // Validate mail
   if (!/^[^\s@]+@[^\s@]+$/.test(mail) || mail.length >= 45) {
