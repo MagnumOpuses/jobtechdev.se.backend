@@ -123,7 +123,7 @@ app.post("/api/form", async function (req, res) {
   }
 
   // Validate name
-  if (/^[a-zA-ZäöåÄÖÅ]+$/i.test(namn)) {
+  if (/^[aA-zZäöåÄÖÅ]+$/i.test(namn)) {
     return raiseError('Namn måste vara a-ö 2-45 tecken');
   }
 
