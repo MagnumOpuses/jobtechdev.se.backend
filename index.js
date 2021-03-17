@@ -112,7 +112,7 @@ app.post("/api/form", async function (req, res) {
 
   const body = req.body;
   const lang = body.lang;
-  const opts = body.options;
+ let opts = body.options;
   const namn = body.namn;
   const mail = body.email;
 
