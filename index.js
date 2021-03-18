@@ -150,7 +150,7 @@ app.post("/api/form", async function (req, res) {
     for (let i=1;opts.length > i;i++){                         
       result += (i == opts.length-1) ? " och "+opts[i]:", "+opts[i] 
     }
-    mailText = `<p> Hej ${namn}!<br> Du är välkommen att ansluta till https://jitsi.jobtechdev.se/komigang/fragestund <br>${result}. <br><br> Med vänlig hälsning, JobTech Development </p>`
+    mailText = `<p> Hej ${namn}!<br> Du är välkommen att ansluta till https://jitsi.jobtechdev.se/komigang/fragestund ${result}. <br><br> Med vänlig hälsning, JobTech Development </p>`
     result = `<p> Tack! ${namn}, för din anmälan. <br>Du har anmält dig till ${result}. <br> En bekräftelse har skickats till:<br> ${mail}</p>`
   }else{
     result=opts[0];
